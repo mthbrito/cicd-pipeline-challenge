@@ -46,13 +46,17 @@ pip install -r requirements.txt
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
+> No Windows, se o comando `uvicorn` não for reconhecido, use `python -m uvicorn app.main:app --host 0.0.0.0 --port 8000`.
+
 A API estará disponível em `http://localhost:8000`, com documentação automática (Swagger) em `http://localhost:8000/docs`.
 
 ### 4. Rodar os testes
 
 ```bash
-pytest tests/ -v
+python -m pytest tests/ -v
 ```
+
+> Recomendado usar sempre `python -m pytest` (em vez de apenas `pytest`) para garantir que o diretório do projeto seja reconhecido corretamente na importação do módulo `app`.
 
 ## Executando com Docker
 
@@ -69,6 +73,17 @@ docker run -p 8000:8000 cicd-pipeline-challenge
 ```
 
 A imagem utiliza **multi-stage build**, separando a etapa de instalação de dependências da imagem final de runtime, resultando em uma imagem mais enxuta e otimizada.
+
+## Testando a imagem publicada (sem clonar o repositório)
+
+Como o pipeline de CD publica automaticamente a imagem no Docker Hub a cada merge em `main`, também é possível rodar a aplicação diretamente, sem precisar clonar o código:
+
+```bash
+docker pull mthbrito/cicd-pipeline-challenge:latest
+docker run -p 8000:8000 mthbrito/cicd-pipeline-challenge:latest
+```
+
+Acesse `http://localhost:8000/health` para confirmar que a API está no ar.
 
 ## Estrutura do repositório
 
